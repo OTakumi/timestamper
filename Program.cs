@@ -132,7 +132,7 @@ namespace TimeStamptoSlack
             if (isStart)
             {
                 // 始業時間を記録する。
-                timeStamp.StartTime = DateTime.Now.ToString("hh:mm:ss");
+                timeStamp.StartTime = DateTime.Now.ToString("HH:mm:ss");
                 var timeStampArr = new[] {
                     timeStamp.Index.ToString(),
                     timeStamp.UserName,
