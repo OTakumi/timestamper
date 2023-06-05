@@ -42,9 +42,15 @@ namespace TimeStamptoSlack
             Console.WriteLine("始業または終業を入力してください。");
             Console.WriteLine("始業：s(start) | 終業：e(end)");
             var input = Console.ReadLine();
-            if (input != "start" || input != "s") { isStart = false; }
+            Console.WriteLine(input);
 
+            if (input != "s" && input != "start")
+            {
+                isStart = false;
+            }
+            
             Console.WriteLine(WriteCSV(isStart, config.UserName, config.TimeStampFilePath));
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -152,7 +158,7 @@ namespace TimeStamptoSlack
             else
             {
                 // 終業時間を記録する。
-                timeStamp.EndTime = DateTime.Now.ToString("hh:mm:ss");
+                timeStamp.EndTime = DateTime.Now.ToString("HH:mm:ss");
                 var timeStampArr = new[] {
                     timeStamp.Index.ToString(),
                     timeStamp.UserName,
@@ -161,13 +167,13 @@ namespace TimeStamptoSlack
                     timeStamp.EndTime,
                 };
                 var timeStampCsv = string.Join(",", timeStampArr);
-                
+
                 using (StreamWriter writer = new StreamWriter(filePath, true, Encoding.UTF8))
                 {
                     writer.WriteLine(timeStampCsv);
                 }
                 Console.WriteLine(timeStampCsv);
-                
+
                 rslt = "End time stamped. 終業打刻しました。";
             }
 
