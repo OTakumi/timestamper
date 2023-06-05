@@ -57,7 +57,6 @@ namespace TimeStamptoSlack
             // テキストの設定はそれぞれで
             if (input == "s" || input == "start")
             {
-                isStart = false;
                 PostSlack(config.ApiUrl, ":shigyo:");
             }
             else if(input == "e" || input == "end") {
@@ -86,6 +85,8 @@ namespace TimeStamptoSlack
                 Console.WriteLine("打刻ファイルを作成します。");
                 Console.WriteLine("ユーザー名を入力してください。");
                 config.UserName = Console.ReadLine();
+                Console.WriteLine("Slack Webhool URLを入力してください。");
+                config.ApiUrl = Console.ReadLine();
 
                 using (StreamWriter file = File.CreateText(configFilePath))
                 {
