@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Diagnostics;
+using System.Net;
 using System.Text;
 using Newtonsoft;
 using Newtonsoft.Json;
@@ -16,6 +17,7 @@ namespace TimeStamptoSlack
         public string EndTime { get; set; } = string.Empty;
     }
 
+    [JsonObject]
     public class Config
     {
         [JsonProperty("user_Name")]
@@ -24,6 +26,13 @@ namespace TimeStamptoSlack
         public string? TimeStampFilePath { get; set; }
         [JsonProperty("api_Url")]
         public string? ApiUrl { get; set; }
+    }
+
+    [JsonObject]
+    public class Slack
+    {
+        [JsonProperty("text")]
+        public string Text { get; set; } = string.Empty;
     }
 
     class Program
@@ -44,9 +53,16 @@ namespace TimeStamptoSlack
             var input = Console.ReadLine();
             Console.WriteLine(input);
 
-            if (input != "s" && input != "start")
+            // 始業、終業のスタンプを投稿する。
+            // テキストの設定はそれぞれで
+            if (input == "s" || input == "start")
             {
                 isStart = false;
+                PostSlack(config.ApiUrl, ":shigyo:");
+            }
+            else if(input == "e" || input == "end") {
+                isStart = false;
+                PostSlack(config.ApiUrl, ":syugyo:");
             }
             
             Console.WriteLine(WriteCSV(isStart, config.UserName, config.TimeStampFilePath));
@@ -96,9 +112,21 @@ namespace TimeStamptoSlack
         /// SlackのIn coming webhookを使用し、任意のチャンネルに、始業、終業の投稿を行う。
         /// </summary>
         /// <returns></returns>
-        static string PostSlack()
+        static async void PostSlack(string webhook, string postText)
         {
-            return "";
+            Slack slack = new Slack()
+            {
+                Text = postText
+            };
+
+            var json = JsonConvert.SerializeObject(slack);
+
+            using (var client = new HttpClient())
+            {
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync(webhook, content);
+            };
         }
 
         /// <summary>
