@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "timestamp_to_slack", "timestamp_to_slack.csproj", "{86BCCBBE-7B79-4FE2-8D1E-9AE2032B8381}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeStamper", "TimeStamper.csproj", "{86BCCBBE-7B79-4FE2-8D1E-9AE2032B8381}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeStamper.Test", "..\test\TimeStamper.Test\TimeStamper.Test.csproj", "{CE056BB1-259C-4468-A805-113C145C9A7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{86BCCBBE-7B79-4FE2-8D1E-9AE2032B8381}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86BCCBBE-7B79-4FE2-8D1E-9AE2032B8381}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86BCCBBE-7B79-4FE2-8D1E-9AE2032B8381}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE056BB1-259C-4468-A805-113C145C9A7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE056BB1-259C-4468-A805-113C145C9A7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE056BB1-259C-4468-A805-113C145C9A7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE056BB1-259C-4468-A805-113C145C9A7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
