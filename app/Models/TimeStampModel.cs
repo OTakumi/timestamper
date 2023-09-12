@@ -8,7 +8,7 @@ namespace timestamp_to_slack.Models
 {
     internal class TimeStampModel
     {
-        public DateTime Today { get; set; }
-        public DateTime Time { get; set; }
+        public string Today { get; set; }
+        public string Time { get; set; }
     }
 }
