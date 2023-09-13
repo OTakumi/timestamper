@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace timestamp_to_slack
+namespace TimeStamper
 {
     [JsonObject]
     public class Slack
     {
         [JsonProperty("text")]
-        public string Text { get; set; } = string.Empty;
+        public string message { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -19,11 +19,11 @@ namespace timestamp_to_slack
     /// </summary>
     public class PostMessage
     {
-        public void ToSlack(string apiKey, string messageBody)
+        public async void ToSlack(string apiKey, string messageBody)
         {
             Slack slack = new Slack()
             {
-                Text = postText
+                message = messageBody,
             };
 
             var json = JsonConvert.SerializeObject(slack);
@@ -32,15 +32,8 @@ namespace timestamp_to_slack
             {
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync(webhook, content);
+                var response = await client.PostAsync(apiKey, content);
             };
-
-        }
-
-        private string Message()
-        {
-            string message = "";
-            return message;
         }
     }
 }
