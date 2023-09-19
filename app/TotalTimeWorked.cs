@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace timestamp_to_slack.Models
+namespace TimeStamper
 {
-    internal class SlackConfig
+    public class TotalTimeWorked
     {
+        private string _totalTimeWorked;
     }
 }
