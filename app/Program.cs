@@ -16,27 +16,27 @@ namespace TimeStamper
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            var currentTime = DateTime.Now.ToString("HH:mm:ss");
+            // Display title
+            Console.WriteLine("=========================");
+            Console.WriteLine("===== Timer Stamper =====");
+            Console.WriteLine("=========================");
 
-            bool isStart = true;
-            Console.WriteLine("始業または終業を入力してください。");
-            Console.WriteLine("始業：s(start) | 終業：e(end)");
-            var input = Console.ReadLine();
-            Console.WriteLine(input);
-            var apiUrl = "";
+            // 設定情報をよみこむ
+            var config = new Config();
 
-            // 始業、終業のスタンプを投稿する。
-            // テキストの設定はそれぞれで
-            var postMessage = new PostMessage();
-            if (input == "s" || input == "start")
-            {
-                postMessage.ToSlack(apiUrl, ":shigyo:");
-            }
-            else if(input == "e" || input == "end") {
-                isStart = false;
-                postMessage.ToSlack(apiUrl, ":syugyo:");
-            }
-            
+            // 打刻ファイルがあるかチェックする
+            var timeStampFile = new TimeStampFile();
+
+            // 打刻
+            var timeStamp = new TimeStamp();
+            var newTimeStampRecord = timeStamp.NewRecord(timeStampFile.ReadData());
+
+            // 打刻ファイルを更新する
+            timeStampFile.Write(newTimeStampRecord);
+
+            // Slackに投稿する
+
+            // 終了
             Console.ReadKey();
         }
     }

@@ -1,64 +1,115 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace timestamp_to_slack
+namespace TimeStamper
 {
     [JsonObject]
-    public class Config
+    public class ConfigInfo
     {
-        [JsonProperty("user_Name")]
-        public string? UserName { get; set; } = string.Empty;
-        [JsonProperty("time_Stamp_File_Path")]
-        public string? TimeStampFilePath { get; set; }
         [JsonProperty("api_Url")]
-        public string ApiUrl { get; set; }
+        public string ApiKey { get; set; } = string.Empty;
     }
 
-    public class InitConfig
+    public class Config
     {
-        /// <summary>
-        /// config.jsonから打刻ファイルのパスを取得する。
-        /// </summary>
-        /// <returns></returns>
-        public static Config GetConfig()
+        private readonly string _apiKey;
+        private readonly string configFileDir = "./";
+        private readonly string configFileName = "config.json";
+
+        public Config()
         {
-            var configFilePath = "./config.json";
-            Config config = new Config()
+            string configFilePath = Path.Combine(configFileDir, configFileName);
+
+            FileIsExist(configFilePath);
+            ConfigInfo configInfo = GetConfigInfo(configFilePath);
+
+            _apiKey = configInfo.ApiKey;
+        }
+
+        public string ApiKey() { return _apiKey; }
+
+        /// <summary>
+        /// 設定ファイルがあるか確認し、無ければ作成する。
+        /// </summary>
+        private void FileIsExist(string configFilePath)
+        {
+            if (string.IsNullOrWhiteSpace(configFilePath))
             {
-                TimeStampFilePath = "./Dakoku.csv",
-            };
+                Console.WriteLine("設定ファイルパスが不正です。");
+                throw new ArgumentNullException(nameof(configFilePath));
+            }
 
             if (!File.Exists(configFilePath))
             {
-                Console.WriteLine("打刻ファイルを作成します。");
-                Console.WriteLine("ユーザー名を入力してください。");
-                config.UserName = Console.ReadLine();
-                Console.WriteLine("Slack Webhool URLを入力してください。");
-                config.ApiUrl = Console.ReadLine();
-
-                using (StreamWriter file = File.CreateText(configFilePath))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(file, config);
-                }
+                Console.WriteLine("設定ファイルを作成します。");
+                CreateConfigFile(configFilePath);
+                Update(configFilePath);
             }
-            else
+        }
+
+        /// <summary>
+        /// 設定ファイルを作成する。
+        /// </summary>
+        /// <param name="configFilePath"></param>
+        private static void CreateConfigFile(string configFilePath)
+        {
+            using FileStream fs = File.Create(configFilePath);
+        }
+
+        /// <summary>
+        /// 設定ファイルの内容を更新する。
+        /// </summary>
+        public void Update(string configFilePath)
+        {
+            // 更新情報を受け付ける
+            var configInfo = new ConfigInfo();
+            Console.WriteLine("設定ファイルを作成します。");
+            Console.WriteLine("Slack Webhool URLを入力してください。");
+            Console.Write("URL：");
+            var apiKey = Console.ReadLine();
+            if(apiKey is not null)
             {
-                var jsonString = File.ReadAllText(configFilePath);
-                var configJson = JsonConvert.DeserializeObject<Config>(jsonString);
-
-                if (configJson != null)
-                {
-                    config = configJson;
-                }
+                configInfo.ApiKey = apiKey;
             }
 
-            Console.WriteLine("File path: " + config.TimeStampFilePath);
-            return config;
+            // 設定ファイルを更新する。
+            try
+            {
+                using (var sw = new StreamWriter(configFilePath, false, Encoding.UTF8))
+                {
+                    var jsonData = JsonConvert.SerializeObject(configInfo);
+                    sw.Write(jsonData);
+                }
+
+                Console.WriteLine("設定ファイルが更新されました。");
+            }
+            catch (Exception ex)
+            {
+                Debug.Write($"failed: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 設定ファイルから設定情報を取得する。
+        /// </summary>
+        /// <returns name="Info">設定内容</returns>
+        private static ConfigInfo GetConfigInfo(string configFilePath)
+        {
+            var configInfo = new ConfigInfo();
+            var jsonString = File.ReadAllText(configFilePath);
+            var configJson = JsonConvert.DeserializeObject<ConfigInfo>(jsonString);
+
+            if (configJson == null)
+            {
+                configInfo.ApiKey = "";
+            }
+
+            return configInfo;
         }
     }
 }
