@@ -12,8 +12,8 @@ namespace TimeStamper
     public class TimeStamp
     {
         private readonly DateTime _timeStamp;
-        private readonly string _timeStampTiming;
-        private readonly string[] _header = new[] { "#", "Date", "StartTime", "EndTime", "TotalWorkTime" };
+        private readonly string _workStatus;
+        private readonly string[] _header = new[] { "#", "date", "start_time", "end_time", "total_work_time" };
 
         /// <summary>
         /// 打刻
@@ -21,7 +21,7 @@ namespace TimeStamper
         /// <param name="time"></param>
         public TimeStamp()
         {
-            _timeStampTiming = ReadCommand();
+            _workStatus = ReadCommand();
             _timeStamp = DateTime.Now;
         }
 
@@ -30,12 +30,12 @@ namespace TimeStamper
         /// </summary>
         /// <returns>打刻時刻</returns>
         public DateTime Time() { return _timeStamp; }
-        
+
         /// <summary>
         /// その打刻が、始業なのか終業なのかを返す
         /// </summary>
         /// <returns></returns>
-        public string Timing() { return _timeStampTiming; }
+        public string Timing() { return _workStatus; }
 
         private static string ReadCommand()
         {
@@ -47,11 +47,11 @@ namespace TimeStamper
 
                 if (timeStampTiming is "s" or "S" or "start" or "Start")
                 {
-                    return "StartTime";
+                    return "start";
                 }
                 else if (timeStampTiming is "e" or "E" or "end" or "End")
                 {
-                    return "EndTime";
+                    return "end";
                 }
                 else
                 {
@@ -65,25 +65,27 @@ namespace TimeStamper
         {
             string[] newTimeStampRecord = new string[_header.Length];
 
-            if (_timeStampTiming is "StartTime")
+            if (_workStatus is "start")
             {
-                newTimeStampRecord[0] = timeStampLog.Count.ToString();
-                newTimeStampRecord[1] = _timeStamp.ToString("yyyy/MM/dd");
-                newTimeStampRecord[2] = _timeStamp.ToString("HH:mm:ss");
+                newTimeStampRecord[Array.IndexOf(_header, '#')] = timeStampLog.Count.ToString();
+                newTimeStampRecord[Array.IndexOf(_header, "date")] = _timeStamp.ToString("yyyy/MM/dd");
+                newTimeStampRecord[Array.IndexOf(_header, "start_time")] = _timeStamp.ToString("HH:mm:ss");
 
                 timeStampLog.Add(newTimeStampRecord);
             }
 
-            if (_timeStampTiming is "EndTime")
+            if (_workStatus is "end")
             {
                 // 打刻履歴ファイルの最終行を取得
                 newTimeStampRecord = timeStampLog.Last();
 
-                if (newTimeStampRecord[2] is not "" && newTimeStampRecord[3] is "")
+                if (newTimeStampRecord[Array.IndexOf(_header, "start_time")] is not ""
+                    && newTimeStampRecord[Array.IndexOf(_header, "end_time")] is "")
                 {
                     // 終業時刻と経過時間を追加
-                    newTimeStampRecord[3] = _timeStamp.ToString("HH:mm:ss");
-                    newTimeStampRecord[4] = (_timeStamp - DateTime.Parse(newTimeStampRecord[2])).ToString();
+                    newTimeStampRecord[Array.IndexOf(_header, "end_time")] = _timeStamp.ToString("HH:mm:ss");
+                    newTimeStampRecord[Array.IndexOf(_header, "total_work_time")]
+                        = (_timeStamp - DateTime.Parse(newTimeStampRecord[2])).ToString();
 
                     timeStampLog.RemoveAt(timeStampLog.Count - 1);
                     timeStampLog.Add(newTimeStampRecord);
