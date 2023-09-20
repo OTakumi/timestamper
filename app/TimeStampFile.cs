@@ -91,8 +91,9 @@ namespace TimeStamper
                     if (csvLine != null)
                         lines.Add(csvLine.Split(','));
                 }
-            } catch (Exception ex) { Console.WriteLine(ex); }
-            
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+
             return lines;
         }
 
@@ -111,14 +112,14 @@ namespace TimeStamper
                 {
                     sw.WriteLine(string.Join(',', timeStampDataLine));
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                throw;
-            }
 
-            Console.WriteLine("打刻しました。");
+                Console.WriteLine("打刻しました。");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("error: ファイルが開かれています。閉じてから再度実行してください。");
+                Console.ReadKey();
+            }
         }
     }
 }
