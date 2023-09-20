@@ -9,10 +9,10 @@ using Newtonsoft.Json;
 namespace TimeStamper
 {
     [JsonObject]
-    public class ConfigInfo
+    public class ConfigInfoJson
     {
         [JsonProperty("api_Url")]
-        public string ApiKey { get; set; } = string.Empty;
+        public string ApiKey { get; set; }
     }
 
     public class Config
@@ -26,7 +26,7 @@ namespace TimeStamper
             string configFilePath = Path.Combine(configFileDir, configFileName);
 
             FileIsExist(configFilePath);
-            ConfigInfo configInfo = GetConfigInfo(configFilePath);
+            ConfigInfoJson configInfo = GetConfigInfo(configFilePath);
 
             _apiKey = configInfo.ApiKey;
         }
@@ -67,7 +67,7 @@ namespace TimeStamper
         public void Update(string configFilePath)
         {
             // 更新情報を受け付ける
-            var configInfo = new ConfigInfo();
+            var configInfo = new ConfigInfoJson();
             Console.WriteLine("設定ファイルを作成します。");
             Console.WriteLine("Slack Webhool URLを入力してください。");
             Console.Write("URL：");
@@ -98,18 +98,17 @@ namespace TimeStamper
         /// 設定ファイルから設定情報を取得する。
         /// </summary>
         /// <returns name="Info">設定内容</returns>
-        private static ConfigInfo GetConfigInfo(string configFilePath)
+        private static ConfigInfoJson GetConfigInfo(string configFilePath)
         {
-            var configInfo = new ConfigInfo();
-            var jsonString = File.ReadAllText(configFilePath);
-            var configJson = JsonConvert.DeserializeObject<ConfigInfo>(jsonString);
-
-            if (configJson == null)
+            var configJson = new ConfigInfoJson()
             {
-                configInfo.ApiKey = "";
-            }
+                ApiKey = ""
+            };
 
-            return configInfo;
+            var jsonString = File.ReadAllText(configFilePath);
+            configJson = JsonConvert.DeserializeObject<ConfigInfoJson>(jsonString);
+
+            return configJson;
         }
     }
 }

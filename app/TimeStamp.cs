@@ -63,8 +63,7 @@ namespace TimeStamper
 
         public List<string[]> NewRecord(List<string[]> timeStampLog)
         {
-            string[] newTimeStampRecord = Enumerable.Repeat<string>("" ,_header.Length).ToArray();
-
+            string[] newTimeStampRecord = Enumerable.Repeat("" ,_header.Length).ToArray();
 
             if (_workStatus is "start")
             {

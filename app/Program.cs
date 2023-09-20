@@ -2,6 +2,7 @@
 using System.Data;
 using System.Diagnostics;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Newtonsoft;
 using Newtonsoft.Json;
@@ -35,6 +36,8 @@ namespace TimeStamper
             timeStampFile.Write(newTimeStampRecord);
 
             // Slackに投稿する
+            var message = new Message(timeStamp.WorkStatus());
+            message.PostToSlack(config.ApiKey());
 
             // 終了
             Console.ReadKey();
