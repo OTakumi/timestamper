@@ -35,7 +35,7 @@ namespace TimeStamper
         /// その打刻が、始業なのか終業なのかを返す
         /// </summary>
         /// <returns></returns>
-        public string Timing() { return _workStatus; }
+        public string WorkStatus() { return _workStatus; }
 
         private static string ReadCommand()
         {
@@ -63,11 +63,12 @@ namespace TimeStamper
 
         public List<string[]> NewRecord(List<string[]> timeStampLog)
         {
-            string[] newTimeStampRecord = new string[_header.Length];
+            string[] newTimeStampRecord = Enumerable.Repeat<string>("" ,_header.Length).ToArray();
+
 
             if (_workStatus is "start")
             {
-                newTimeStampRecord[Array.IndexOf(_header, '#')] = timeStampLog.Count.ToString();
+                newTimeStampRecord[Array.IndexOf(_header, "#")] = timeStampLog.Count.ToString();
                 newTimeStampRecord[Array.IndexOf(_header, "date")] = _timeStamp.ToString("yyyy/MM/dd");
                 newTimeStampRecord[Array.IndexOf(_header, "start_time")] = _timeStamp.ToString("HH:mm:ss");
 
