@@ -100,13 +100,8 @@ namespace TimeStamper
         /// <returns name="Info">設定内容</returns>
         private static ConfigInfoJson GetConfigInfo(string configFilePath)
         {
-            var configJson = new ConfigInfoJson()
-            {
-                ApiKey = ""
-            };
-
             var jsonString = File.ReadAllText(configFilePath);
-            configJson = JsonConvert.DeserializeObject<ConfigInfoJson>(jsonString);
+            var configJson = JsonConvert.DeserializeObject<ConfigInfoJson>(jsonString);
 
             return configJson;
         }
