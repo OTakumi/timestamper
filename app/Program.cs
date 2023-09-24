@@ -32,12 +32,17 @@ namespace TimeStamper
             var timeStamp = new TimeStamp();
             var newTimeStampRecord = timeStamp.NewRecord(timeStampFile.ReadData());
 
+            Console.WriteLine("打刻時間: " + timeStamp.Time().ToString());
+            Console.WriteLine();
+
             // 打刻ファイルを更新する
             timeStampFile.Write(newTimeStampRecord);
 
             // Slackに投稿する
             var message = new Message(timeStamp.WorkStatus());
             message.PostToSlack(config.ApiKey());
+
+            Console.WriteLine("=========================");
 
             // 終了
             Console.ReadKey();
